@@ -78,6 +78,21 @@ const localKey = "las-marias-products";
 const fallbackImage =
   "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=900&q=80";
 
+function imagePath(file) {
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  return `products/${crypto.randomUUID()}.${extension}`;
+}
+
+function firebaseMessage(error) {
+  if (error?.code === "storage/unauthorized") {
+    return "Firebase no autorizo subir la foto. Revisa que estes con el Gmail admin.";
+  }
+  if (error?.code === "permission-denied") {
+    return "Firebase no autorizo guardar el producto. Revisa el Gmail admin.";
+  }
+  return `No se pudo guardar: ${error?.code || error?.message || "error desconocido"}`;
+}
+
 function money(value) {
   return new Intl.NumberFormat("es-AR", {
     style: "currency",
@@ -221,8 +236,8 @@ export default function App() {
 
       if (imageFile) {
         if (firebaseReady) {
-          const imageRef = ref(storage, `products/${Date.now()}-${imageFile.name}`);
-          await uploadBytes(imageRef, imageFile);
+          const imageRef = ref(storage, imagePath(imageFile));
+          await uploadBytes(imageRef, imageFile, { contentType: imageFile.type });
           image = await getDownloadURL(imageRef);
         } else {
           image = await fileToDataUrl(imageFile);
@@ -256,8 +271,9 @@ export default function App() {
       }
 
       setNotice("Producto guardado.");
-    } catch {
-      setNotice("No se pudo guardar. Revisa Firebase o intenta de nuevo.");
+    } catch (error) {
+      console.error(error);
+      setNotice(firebaseMessage(error));
     } finally {
       setSaving(false);
     }
