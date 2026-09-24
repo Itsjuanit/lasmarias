@@ -1,25 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap");
 
 :root {
-  --bg: #f8efe6;
-  --paper: #fffaf4;
-  --ink: #261d18;
-  --muted: #76695f;
-  --line: #ead8c8;
-  --gold: #b4874f;
-  --rose: #9d5c63;
-  --sage: #64785f;
-  --shadow: 0 18px 50px rgba(64, 42, 26, 0.13);
+  --bg: #f6f4f0;
+  --paper: #fffdf9;
+  --ink: #211d1a;
+  --soft-ink: #4d4641;
+  --muted: #7a716b;
+  --line: #e4ddd5;
+  --gold: #a77b47;
+  --rose: #916069;
+  --sage: #607160;
+  --radius: 8px;
+  --shadow: 0 18px 42px rgba(33, 29, 26, 0.1);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(180, 135, 79, 0.16), transparent 34rem),
+    linear-gradient(180deg, rgba(255, 253, 249, 0.86), rgba(246, 244, 240, 0.98)),
     var(--bg);
   color: var(--ink);
   font-family: Montserrat, system-ui, sans-serif;
@@ -31,9 +37,18 @@ textarea {
   font: inherit;
 }
 
+button,
+a {
+  touch-action: manipulation;
+}
+
 button {
   border: 0;
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 img {
@@ -53,33 +68,28 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  background: rgba(248, 239, 230, 0.88);
-  border-bottom: 1px solid rgba(234, 216, 200, 0.8);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 253, 249, 0.88);
+  border-bottom: 1px solid rgba(228, 221, 213, 0.85);
   backdrop-filter: blur(16px);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.7rem;
   min-width: 0;
   color: inherit;
   text-decoration: none;
 }
 
-.brand-mark {
-  display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
-  place-items: center;
+.brand-logo {
+  width: 3rem;
+  height: 3rem;
   flex: 0 0 auto;
-  border: 1px solid var(--gold);
-  border-radius: 50%;
-  color: var(--gold);
-  font-family: Cormorant, serif;
-  font-size: 1.1rem;
-  font-weight: 700;
+  border-radius: var(--radius);
+  object-fit: cover;
+  background: var(--ink);
 }
 
 .brand strong,
@@ -91,7 +101,7 @@ h2 {
 
 .brand strong {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.18rem;
   line-height: 1;
 }
 
@@ -100,14 +110,15 @@ h2 {
 .eyebrow {
   color: var(--muted);
   font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .top-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .ghost-button,
@@ -117,15 +128,22 @@ h2 {
 .login-button,
 .whatsapp-button,
 .danger-button,
-.icon-button {
+.primary-link,
+.soft-button {
+  display: inline-flex;
   min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
   padding: 0 1rem;
-  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+  text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease,
+    opacity 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
-.ghost-button {
-  background: rgba(255, 250, 244, 0.8);
+.ghost-button,
+.soft-button {
+  background: rgba(255, 253, 249, 0.74);
   color: var(--ink);
   border: 1px solid var(--line);
 }
@@ -133,10 +151,15 @@ h2 {
 .cart-button,
 .save-button,
 .login-button,
-.whatsapp-button {
+.whatsapp-button,
+.primary-link {
   background: var(--ink);
-  color: #fffaf4;
+  color: #fffdf9;
   box-shadow: var(--shadow);
+}
+
+.soft-button {
+  color: var(--soft-ink);
 }
 
 .cart-button span {
@@ -147,23 +170,25 @@ h2 {
   place-items: center;
   border-radius: 999px;
   background: var(--gold);
-  color: var(--ink);
+  color: #fffdf9;
   font-weight: 700;
 }
 
 .danger-button {
-  background: #f4dddd;
+  background: #f6e1e3;
   color: #8a2020;
 }
 
-button:active {
+button:active,
+a:active {
   transform: scale(0.98);
 }
 
 button:focus-visible,
+a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid rgba(180, 135, 79, 0.45);
+  outline: 3px solid rgba(167, 123, 71, 0.44);
   outline-offset: 3px;
 }
 
@@ -176,107 +201,164 @@ main {
 .hero {
   display: grid;
   gap: 1rem;
-  margin: 0.5rem 0 1rem;
+  padding: 1rem 0 1.25rem;
 }
 
-.hero > div {
-  padding: 1.25rem 0.25rem 0;
+.hero-copy {
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  min-height: 18rem;
 }
 
 .hero h1 {
-  max-width: 11ch;
+  max-width: 12ch;
   margin: 0;
-  font-size: clamp(2.5rem, 13vw, 4.8rem);
-  line-height: 0.9;
+  font-size: clamp(2.7rem, 13vw, 5rem);
+  font-weight: 700;
+  line-height: 0.92;
+}
+
+.hero p {
+  margin: 0;
 }
 
 .hero p:not(.eyebrow) {
-  max-width: 35rem;
-  color: var(--muted);
+  max-width: 34rem;
+  color: var(--soft-ink);
   font-size: 1rem;
   line-height: 1.65;
 }
 
-.hero img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border-radius: 1.5rem;
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.hero-brand {
+  display: grid;
+  min-height: 19rem;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: #1f1f1f;
   box-shadow: var(--shadow);
+}
+
+.hero-brand img {
+  width: min(84%, 24rem);
+  object-fit: contain;
+}
+
+.hero-brand span {
+  align-self: end;
+  margin-bottom: 1rem;
+  color: #e7d8d2;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.catalog-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.section-head h2 {
+  margin: 0.15rem 0 0;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.section-head span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .tabs {
   display: flex;
   gap: 0.5rem;
-  margin: 1.25rem -1rem 1rem;
-  padding: 0 1rem 0.5rem;
+  margin: 0 -1rem;
+  padding: 0 1rem 0.35rem;
   overflow-x: auto;
 }
 
 .tabs button {
   min-height: 2.75rem;
-  padding: 0 1.05rem;
+  padding: 0 1rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 250, 244, 0.75);
+  background: rgba(255, 253, 249, 0.78);
   color: var(--muted);
   white-space: nowrap;
 }
 
 .tabs .active {
   background: var(--ink);
-  color: #fffaf4;
+  color: #fffdf9;
   border-color: var(--ink);
 }
 
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .product-card {
+  display: grid;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(234, 216, 200, 0.9);
-  border-radius: 1.25rem;
-  background: rgba(255, 250, 244, 0.82);
-  box-shadow: 0 10px 28px rgba(64, 42, 26, 0.08);
+  border: 1px solid rgba(228, 221, 213, 0.9);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 249, 0.9);
+  box-shadow: 0 10px 26px rgba(33, 29, 26, 0.07);
 }
 
 .photo-wrap {
   position: relative;
-  background: #ead8c8;
+  background: #e7dfd6;
 }
 
 .photo-wrap img {
   width: 100%;
-  aspect-ratio: 1 / 1.08;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
 .stock {
   position: absolute;
-  left: 0.6rem;
-  top: 0.6rem;
+  left: 0.5rem;
+  top: 0.5rem;
   border-radius: 999px;
-  padding: 0.35rem 0.55rem;
+  padding: 0.34rem 0.55rem;
   font-size: 0.72rem;
   font-weight: 700;
 }
 
 .stock.on {
-  background: #eaf1df;
-  color: #3f6235;
+  background: #e8f0e5;
+  color: #385b36;
 }
 
 .stock.off {
-  background: rgba(38, 29, 24, 0.78);
-  color: #fffaf4;
+  background: rgba(33, 29, 26, 0.82);
+  color: #fffdf9;
 }
 
 .product-copy {
-  padding: 0.75rem 0.75rem 0.6rem;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem 0.75rem 0.65rem;
 }
 
 .product-copy p,
@@ -286,47 +368,44 @@ main {
 }
 
 .product-copy h2 {
-  min-height: 2.7rem;
-  margin-top: 0.15rem;
-  font-size: 1.3rem;
-  line-height: 1.05;
+  min-height: 2.4rem;
+  font-size: 1.22rem;
+  line-height: 1;
 }
 
 .product-copy strong {
-  display: block;
-  margin-top: 0.45rem;
   color: var(--rose);
   font-variant-numeric: tabular-nums;
 }
 
 .product-copy small {
-  display: block;
-  margin-top: 0.4rem;
   color: var(--muted);
-  line-height: 1.45;
+  font-size: 0.82rem;
+  line-height: 1.4;
 }
 
 .add-button {
   width: calc(100% - 1rem);
-  margin: 0 0.5rem 0.6rem;
+  min-height: 2.65rem;
+  margin: auto 0.5rem 0.55rem;
   background: var(--sage);
   color: white;
+  font-weight: 700;
 }
 
 .add-button:disabled {
-  cursor: not-allowed;
-  background: #d8ccc1;
-  color: #756b63;
+  background: #ded8d1;
+  color: #706762;
   box-shadow: none;
 }
 
 .empty,
 .notice {
-  border: 1px dashed var(--line);
-  border-radius: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   padding: 1rem;
   color: var(--muted);
-  background: rgba(255, 250, 244, 0.65);
+  background: rgba(255, 253, 249, 0.72);
   line-height: 1.5;
 }
 
@@ -336,7 +415,7 @@ main {
   z-index: 50;
   display: grid;
   align-items: end;
-  background: rgba(38, 29, 24, 0.32);
+  background: rgba(33, 29, 26, 0.36);
 }
 
 .cart-sheet {
@@ -344,10 +423,10 @@ main {
   max-height: 86dvh;
   margin: 0 auto;
   overflow: auto;
-  border-radius: 1.5rem 1.5rem 0 0;
+  border-radius: var(--radius) var(--radius) 0 0;
   background: var(--paper);
   padding: 1rem;
-  box-shadow: 0 -20px 60px rgba(38, 29, 24, 0.25);
+  box-shadow: 0 -20px 60px rgba(33, 29, 26, 0.22);
 }
 
 .sheet-head,
@@ -366,12 +445,8 @@ main {
   margin: 0;
 }
 
-.icon-button {
-  width: 2.75rem;
-  padding: 0;
-  background: var(--ink);
-  color: white;
-  font-weight: 700;
+.close-button {
+  padding-inline: 0.85rem;
 }
 
 .cart-list {
@@ -382,9 +457,9 @@ main {
 
 .cart-item {
   align-items: flex-start;
-  padding: 0.75rem;
+  padding: 0.7rem;
   border: 1px solid var(--line);
-  border-radius: 1rem;
+  border-radius: var(--radius);
   background: white;
 }
 
@@ -393,7 +468,7 @@ main {
   width: 4rem;
   height: 4rem;
   flex: 0 0 auto;
-  border-radius: 0.85rem;
+  border-radius: var(--radius);
   object-fit: cover;
 }
 
@@ -425,7 +500,7 @@ main {
 .qty button {
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
+  border-radius: 999px;
   background: var(--bg);
   color: var(--ink);
 }
@@ -437,7 +512,8 @@ main {
 
 .whatsapp-button {
   width: 100%;
-  background: #1f7a4a;
+  background: #216a44;
+  font-weight: 700;
 }
 
 .admin {
@@ -460,8 +536,8 @@ main {
   gap: 0.85rem;
   padding: 1rem;
   border: 1px solid var(--line);
-  border-radius: 1.25rem;
-  background: rgba(255, 250, 244, 0.8);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 249, 0.78);
 }
 
 .product-form label {
@@ -477,7 +553,7 @@ main {
   min-height: 2.9rem;
   width: 100%;
   border: 1px solid var(--line);
-  border-radius: 0.8rem;
+  border-radius: var(--radius);
   background: white;
   color: var(--ink);
   padding: 0.75rem;
@@ -492,7 +568,7 @@ main {
 .mini-checks {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .check {
@@ -503,7 +579,7 @@ main {
   border: 1px solid var(--line);
   border-radius: 999px;
   background: white;
-  padding: 0 0.85rem;
+  padding: 0 0.8rem;
   color: var(--ink) !important;
 }
 
@@ -520,10 +596,10 @@ main {
 
 .admin-row {
   align-items: flex-start;
-  padding: 0.75rem;
+  padding: 0.7rem;
   border: 1px solid var(--line);
-  border-radius: 1rem;
-  background: rgba(255, 250, 244, 0.82);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 249, 0.86);
 }
 
 .admin-row > div:nth-child(2) {
@@ -536,6 +612,24 @@ main {
   gap: 0.5rem;
 }
 
+@media (hover: hover) {
+  .ghost-button:hover,
+  .soft-button:hover,
+  .tabs button:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+
+  .cart-button:hover,
+  .save-button:hover,
+  .login-button:hover,
+  .primary-link:hover,
+  .add-button:hover,
+  .whatsapp-button:hover {
+    transform: translateY(-1px);
+  }
+}
+
 @media (min-width: 720px) {
   .site-header {
     padding-inline: 2rem;
@@ -546,18 +640,14 @@ main {
   }
 
   .hero {
-    grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 0.8fr);
-    align-items: end;
-    margin-top: 1.25rem;
-  }
-
-  .hero img {
-    aspect-ratio: 4 / 5;
+    grid-template-columns: minmax(0, 0.95fr) minmax(20rem, 0.85fr);
+    align-items: stretch;
+    padding-block: 1.5rem 2rem;
   }
 
   .product-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 0.9rem;
   }
 
   .product-form {
@@ -572,6 +662,29 @@ main {
 @media (min-width: 1040px) {
   .product-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .brand small {
+    display: none;
+  }
+
+  .top-actions {
+    gap: 0.35rem;
+  }
+
+  .ghost-button,
+  .cart-button {
+    padding-inline: 0.75rem;
+  }
+
+  .product-grid {
+    gap: 0.62rem;
+  }
+
+  .product-copy {
+    padding: 0.65rem;
   }
 }
 

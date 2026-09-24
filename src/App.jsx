@@ -293,10 +293,10 @@ export default function App() {
     <div className="app-shell">
       <header className="site-header">
         <a className="brand" href="/" onClick={() => setAdminView(false)}>
-          <span className="brand-mark">LM</span>
+          <img className="brand-logo" src="/logo-las-marias.png" alt="" aria-hidden="true" />
           <span>
             <strong>Las Marias</strong>
-            <small>joyas elegidas</small>
+            <small>catalogo de joyas</small>
           </span>
         </a>
         <nav className="top-actions" aria-label="Acciones principales">
@@ -313,30 +313,58 @@ export default function App() {
         {!adminView ? (
           <>
             <section className="hero">
-              <div>
-                <p className="eyebrow">catalogo online</p>
-                <h1>Joyas simples, lindas y listas para pedir por WhatsApp.</h1>
+              <div className="hero-copy">
+                <p className="eyebrow">Las Marias</p>
+                <h1>Joyas delicadas para elegir con calma.</h1>
                 <p>
-                  Elegi tus piezas, arma tu carrito y mandanos la consulta directa.
+                  Mira el catalogo, suma tus favoritas y mandanos tu consulta por
+                  WhatsApp. Simple, directo y sin vueltas.
                 </p>
+                <div className="hero-actions">
+                  <a className="primary-link" href="#piezas">
+                    Ver catalogo
+                  </a>
+                  <button
+                    className="soft-button"
+                    onClick={() =>
+                      window.open(
+                        `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                          "Hola Las Marias! Quiero consultar por sus joyas."
+                        )}`
+                      )
+                    }
+                  >
+                    Consultar
+                  </button>
+                </div>
               </div>
-              <img
-                src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80"
-                alt="Joyas doradas delicadas"
-              />
+              <div className="hero-brand">
+                <img src="/logo-las-marias.png" alt="Las Marias" />
+                <span>piezas seleccionadas</span>
+              </div>
             </section>
 
-            <CategoryTabs
-              categories={categories}
-              active={category}
-              onSelect={setCategory}
-            />
+            <section className="catalog-section" id="piezas">
+              <div className="section-head">
+                <div>
+                  <p className="eyebrow">catalogo</p>
+                  <h2>Piezas disponibles</h2>
+                </div>
+                <span>{shownProducts.length} items</span>
+              </div>
 
-            {loading ? (
-              <p className="empty">Cargando catalogo...</p>
-            ) : (
-              <ProductGrid products={shownProducts} onAdd={addToCart} />
-            )}
+              <CategoryTabs
+                categories={categories}
+                active={category}
+                onSelect={setCategory}
+              />
+
+              {loading ? (
+                <p className="empty">Cargando catalogo...</p>
+              ) : (
+                <ProductGrid products={shownProducts} onAdd={addToCart} />
+              )}
+            </section>
           </>
         ) : (
           <AdminPanel
@@ -409,7 +437,7 @@ function ProductGrid({ products, onAdd }) {
             disabled={!product.inStock}
             onClick={() => onAdd(product)}
           >
-            {product.inStock ? "Agregar" : "Consultar luego"}
+            {product.inStock ? "Sumar" : "Sin stock"}
           </button>
         </article>
       ))}
@@ -428,8 +456,8 @@ function CartSheet({ open, cart, total, onClose, onQty, onSend }) {
             <p className="eyebrow">tu seleccion</p>
             <h2>Carrito</h2>
           </div>
-          <button className="icon-button" aria-label="Cerrar carrito" onClick={onClose}>
-            x
+          <button className="ghost-button close-button" onClick={onClose}>
+            Cerrar
           </button>
         </div>
 
@@ -460,7 +488,7 @@ function CartSheet({ open, cart, total, onClose, onQty, onSend }) {
               <strong>{money(total)}</strong>
             </div>
             <button className="whatsapp-button" onClick={onSend}>
-              Enviar pedido por WhatsApp
+              Enviar por WhatsApp
             </button>
           </>
         ) : (
@@ -504,7 +532,7 @@ function AdminPanel({
         <div>
           <p className="eyebrow">panel privado</p>
           <h1>Administrar catalogo</h1>
-          <p>Subi fotos, cambia precios y controla que se ve en el catalogo.</p>
+          <p>Subi fotos, precios y stock. Lo visible aparece en la tienda.</p>
         </div>
         {firebaseReady && user ? (
           <button className="ghost-button" onClick={onLogout}>
@@ -527,7 +555,7 @@ function AdminPanel({
 
       {firebaseReady && user && !adminAllowed && (
         <p className="notice">
-          Este Gmail no es admin. Configura VITE_ADMIN_EMAIL con el correo correcto.
+          Este Gmail no tiene acceso al panel de Las Marias.
         </p>
       )}
 
