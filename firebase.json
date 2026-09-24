@@ -1,0 +1,19 @@
+{
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Las Marias",
+        "supportEmail": "tejadajuanignacio12@gmail.com",
+        "authorizedRedirectUris": [
+          "https://lasmarias-lyart.vercel.app"
+        ]
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}
