@@ -18,7 +18,6 @@ import {
   where,
   query,
 } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -38,7 +37,6 @@ const app = firebaseReady ? initializeApp(firebaseConfig) : null;
 
 export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
-export const storage = app ? getStorage(app) : null;
 export const provider = new GoogleAuthProvider();
 
 export {
@@ -46,15 +44,12 @@ export {
   collection,
   deleteDoc,
   doc,
-  getDownloadURL,
   onAuthStateChanged,
   onSnapshot,
   query,
-  ref,
   serverTimestamp,
   signInWithPopup,
   signOut,
   updateDoc,
-  uploadBytes,
   where,
 };

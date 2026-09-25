@@ -5,7 +5,7 @@ Catalogo mobile-first para joyas: productos con foto/precio, carrito y envio dir
 ## Stack
 
 - Vite + React en JavaScript
-- Firebase Auth, Firestore y Storage
+- Firebase Auth y Firestore
 - Vercel para hosting
 
 ## Correr local
@@ -23,9 +23,10 @@ Sin `.env`, la app funciona en modo demo con datos locales. Para produccion, cre
 2. Crear una app web y copiar las variables a `.env.local`.
 3. Activar Authentication > Google.
 4. Activar Firestore Database.
-5. Activar Storage.
-6. Cambiar `tu-email@gmail.com` por el Gmail admin en `firestore.rules`, `storage.rules` y `VITE_ADMIN_EMAIL`.
-7. Publicar las reglas desde Firebase Console.
+5. Cambiar `tu-email@gmail.com` por el Gmail admin en `firestore.rules` y `VITE_ADMIN_EMAIL`.
+6. Publicar las reglas desde Firebase Console o Firebase CLI.
+
+Las fotos se comprimen en el navegador y se guardan en Firestore junto al producto. No usa Firebase Storage, asi evita el bloqueo de bucket nuevo que pide Blaze.
 
 ## Vercel + GitHub
 

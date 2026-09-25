@@ -8,18 +8,14 @@ import {
   deleteDoc,
   doc,
   firebaseReady,
-  getDownloadURL,
   onAuthStateChanged,
   onSnapshot,
   provider,
   query,
-  ref,
   serverTimestamp,
   signInWithPopup,
   signOut,
-  storage,
   updateDoc,
-  uploadBytes,
   whatsappNumber,
   where,
 } from "./firebase";
@@ -78,15 +74,7 @@ const localKey = "las-marias-products";
 const fallbackImage =
   "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=900&q=80";
 
-function imagePath(file) {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  return `products/${crypto.randomUUID()}.${extension}`;
-}
-
 function firebaseMessage(error) {
-  if (error?.code === "storage/unauthorized") {
-    return "Firebase no autorizo subir la foto. Revisa que estes con el Gmail admin.";
-  }
   if (error?.code === "permission-denied") {
     return "Firebase no autorizo guardar el producto. Revisa el Gmail admin.";
   }
@@ -113,6 +101,19 @@ function writeLocalProducts(products) {
   localStorage.setItem(localKey, JSON.stringify(products));
 }
 
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => resolve({ image, url });
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("No pude leer la foto."));
+    };
+    image.src = url;
+  });
+}
+
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -120,6 +121,33 @@ function fileToDataUrl(file) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+async function imageFileToDataUrl(file) {
+  const { image, url } = await loadImage(file);
+  try {
+    const maxSize = 900;
+    const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.width * scale));
+    canvas.height = Math.max(1, Math.round(image.height * scale));
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", 0.76)
+    );
+    if (!blob) throw new Error("No pude preparar la foto.");
+    const dataUrl = await fileToDataUrl(blob);
+    if (dataUrl.length > 850000) {
+      throw new Error("La foto quedo muy pesada. Proba con otra mas liviana.");
+    }
+    return dataUrl;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 export default function App() {
@@ -235,13 +263,7 @@ export default function App() {
       let image = product.image;
 
       if (imageFile) {
-        if (firebaseReady) {
-          const imageRef = ref(storage, imagePath(imageFile));
-          await uploadBytes(imageRef, imageFile, { contentType: imageFile.type });
-          image = await getDownloadURL(imageRef);
-        } else {
-          image = await fileToDataUrl(imageFile);
-        }
+        image = await imageFileToDataUrl(imageFile);
       }
 
       const payload = {
